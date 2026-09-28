@@ -13,11 +13,23 @@ const parseChords = (rawText) =>
       if (!name || !shape || shape.length !== 6 || !/^[0-9xX]+$/.test(shape)) {
         return null;
       }
-      return { name, shape: shape.toLowerCase() };
+      const normalizedShape = shape.toLowerCase();
+      const playedFrets = normalizedShape
+        .split("")
+        .map((value) => (value === "x" ? value : Number(value)))
+        .filter((value) => Number.isInteger(value) && value > 0);
+      if (playedFrets.length) {
+        const minFret = Math.min(...playedFrets);
+        const maxFret = Math.max(...playedFrets);
+        if (maxFret - minFret > 4) {
+          return null;
+        }
+      }
+      return { name, shape: normalizedShape };
     })
     .filter(Boolean);
 
-const createChordDiagram = (shape) => {
+const createChordDiagram = (name, shape) => {
   const width = 120;
   const height = 150;
   const strings = 6;
@@ -65,7 +77,7 @@ const createChordDiagram = (shape) => {
       ? `<text x="${left + gridWidth + 8}" y="${top + fretSpacing}" font-size="12" fill="#4d556f">${baseFret}fr</text>`
       : "";
 
-  return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="120" role="img" aria-label="Chord diagram">${lines.join(
+  return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="120" role="img" aria-label="${name} chord diagram">${lines.join(
     ""
   )}${markers}${label}</svg>`;
 };
@@ -101,7 +113,7 @@ const renderPoster = () => {
       card.appendChild(name);
 
       const diagram = document.createElement("div");
-      diagram.innerHTML = createChordDiagram(chord.shape);
+      diagram.innerHTML = createChordDiagram(chord.name, chord.shape);
       card.appendChild(diagram);
 
       grid.appendChild(card);
