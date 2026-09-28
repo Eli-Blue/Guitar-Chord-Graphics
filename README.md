@@ -8,7 +8,7 @@ This repository includes a simple static website for building printable guitar c
 
 ### Run locally
 
-Open `/home/runner/work/Guitar-Chord-Graphics/Guitar-Chord-Graphics/index.html` directly in a browser, or serve the folder with a static file server.
+Open `index.html` from the repository root directly in a browser, or serve the folder with a static file server.
 
 ### Usage
 

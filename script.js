@@ -74,20 +74,52 @@ const renderPoster = () => {
   const title = titleInput.value.trim() || "Guitar Chord Poster";
   const subtitle = subtitleInput.value.trim();
   const chords = parseChords(chordInput.value);
+  poster.replaceChildren();
 
-  const cards = chords
-    .map(
-      (chord) =>
-        `<article class="chord-card"><h3 class="chord-name">${chord.name}</h3>${createChordDiagram(chord.shape)}</article>`
-    )
-    .join("");
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+  poster.appendChild(heading);
 
-  poster.innerHTML = `<h2>${title}</h2>
-    ${subtitle ? `<p class="subtitle">${subtitle}</p>` : ""}
-    ${cards ? `<section class="chord-grid">${cards}</section>` : `<p class="message">No valid chords yet. Use "Name Position" and six characters, e.g. "D xx0232".</p>`}`;
+  if (subtitle) {
+    const subtitleNode = document.createElement("p");
+    subtitleNode.className = "subtitle";
+    subtitleNode.textContent = subtitle;
+    poster.appendChild(subtitleNode);
+  }
+
+  if (chords.length) {
+    const grid = document.createElement("section");
+    grid.className = "chord-grid";
+
+    chords.forEach((chord) => {
+      const card = document.createElement("article");
+      card.className = "chord-card";
+
+      const name = document.createElement("h3");
+      name.className = "chord-name";
+      name.textContent = chord.name;
+      card.appendChild(name);
+
+      const diagram = document.createElement("div");
+      diagram.innerHTML = createChordDiagram(chord.shape);
+      card.appendChild(diagram);
+
+      grid.appendChild(card);
+    });
+
+    poster.appendChild(grid);
+  } else {
+    const message = document.createElement("p");
+    message.className = "message";
+    message.textContent = 'No valid chords yet. Use "Name Position" and six characters, e.g. "D xx0232".';
+    poster.appendChild(message);
+  }
 };
 
 document.getElementById("generate").addEventListener("click", renderPoster);
 document.getElementById("print").addEventListener("click", () => window.print());
+titleInput.addEventListener("input", renderPoster);
+subtitleInput.addEventListener("input", renderPoster);
+chordInput.addEventListener("input", renderPoster);
 
 renderPoster();
