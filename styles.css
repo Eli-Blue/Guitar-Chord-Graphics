@@ -1,0 +1,172 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f6f7fb;
+  color: #161a27;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(22, 26, 39, 0.08);
+  padding: 18px;
+}
+
+.controls h1 {
+  margin-top: 0;
+  margin-bottom: 6px;
+  font-size: 1.5rem;
+}
+
+.controls p {
+  margin: 0 0 8px;
+  color: #4d556f;
+}
+
+.controls .example {
+  margin-bottom: 14px;
+}
+
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+input,
+textarea,
+button {
+  width: 100%;
+  font: inherit;
+}
+
+input,
+textarea {
+  border: 1px solid #c6ccdd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.actions {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  background: #2e5be7;
+  color: #fff;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button#print {
+  background: #2e3347;
+}
+
+.preview-panel {
+  overflow: auto;
+}
+
+.poster {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #d6dbec;
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.poster h2 {
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.poster .subtitle {
+  text-align: center;
+  margin: 6px 0 22px;
+  color: #4d556f;
+}
+
+.chord-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 18px;
+}
+
+.chord-card {
+  border: 1px solid #d6dbec;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.chord-name {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.message {
+  text-align: center;
+  color: #a43434;
+  margin: 8px 0 0;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .controls {
+    display: none;
+  }
+
+  .layout {
+    padding: 0;
+    display: block;
+  }
+
+  .panel {
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .poster {
+    max-width: unset;
+    border: 0;
+    border-radius: 0;
+  }
+}

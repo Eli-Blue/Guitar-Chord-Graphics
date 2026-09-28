@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guitar Chord Poster Creator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="panel controls">
+        <h1>Guitar Chord Poster Creator</h1>
+        <p>Create a printable poster by entering one chord per line in the format <code>Name Position</code>.</p>
+        <p class="example">Example: <code>C x32010</code></p>
+
+        <label for="poster-title">Poster title</label>
+        <input id="poster-title" type="text" value="My Guitar Chord Poster" />
+
+        <label for="poster-subtitle">Subtitle (optional)</label>
+        <input id="poster-subtitle" type="text" value="Essential Open Chords" />
+
+        <label for="chord-data">Chords</label>
+        <textarea id="chord-data" rows="12">C x32010
+G 320003
+D xx0232
+Em 022000
+Am x02210
+E 022100</textarea>
+
+        <div class="actions">
+          <button id="generate" type="button">Generate Poster</button>
+          <button id="print" type="button">Print / Save PDF</button>
+        </div>
+      </section>
+
+      <section class="panel preview-panel">
+        <article id="poster" class="poster" aria-live="polite"></article>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
