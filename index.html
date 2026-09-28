@@ -12,6 +12,7 @@
         <h1>Guitar Chord Poster Creator</h1>
         <p>Create a printable poster by entering one chord per line in the format <code>Name Position</code>.</p>
         <p class="example">Example: <code>C x32010</code></p>
+        <p class="example">High frets: <code>F#m x-9-11-11-10-x</code></p>
 
         <label for="poster-title">Poster title</label>
         <input id="poster-title" type="text" value="My Guitar Chord Poster" />
@@ -31,7 +32,7 @@ E 022100</textarea>
           <button id="generate" type="button">Generate Poster</button>
           <button id="print" type="button">Print / Save PDF</button>
         </div>
-        <p id="status-message" class="status-message" role="alert" aria-live="assertive"></p>
+        <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
       </section>
 
       <section class="panel preview-panel">

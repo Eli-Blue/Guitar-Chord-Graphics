@@ -5,6 +5,16 @@ const poster = document.getElementById("poster");
 const statusMessage = document.getElementById("status-message");
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+const parsePosition = (positionText) => {
+  if (/^[0-9xX]{6}$/.test(positionText)) {
+    return positionText.split("");
+  }
+  if (/^([0-9xX]+-){5}[0-9xX]+$/.test(positionText)) {
+    return positionText.split("-");
+  }
+  return null;
+};
+
 const parseChords = (rawText) => {
   let invalidCount = 0;
 
@@ -13,35 +23,39 @@ const parseChords = (rawText) => {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const match = line.match(/^(.*\S)\s+([0-9xX]{6})$/);
+      const match = line.match(/^(.*\S)\s+(\S+)$/);
       if (!match) {
         invalidCount += 1;
         return null;
       }
 
-      const [, name, shape] = match;
-      const normalizedShape = shape.toLowerCase();
-      const playedFrets = normalizedShape
-        .split("")
+      const [, name, position] = match;
+      const values = parsePosition(position);
+      if (!values || values.length !== 6) {
+        invalidCount += 1;
+        return null;
+      }
+
+      const normalizedValues = values.map((value) => value.toLowerCase());
+      const playedFrets = normalizedValues
         .map((value) => (value === "x" ? value : Number(value)))
         .filter((value) => Number.isInteger(value) && value > 0);
       if (playedFrets.length) {
-        const minFret = Math.min(...playedFrets);
-        const maxFret = Math.max(...playedFrets);
-        if (maxFret - minFret > 4) {
+        const baseFret = Math.min(...playedFrets);
+        if (playedFrets.some((fret) => fret > baseFret + 4)) {
           invalidCount += 1;
           return null;
         }
       }
 
-      return { name, shape: normalizedShape };
+      return { name, values: normalizedValues };
     })
     .filter(Boolean);
 
   return { chords, invalidCount };
 };
 
-const createChordDiagram = (name, shape) => {
+const createChordDiagram = (name, values) => {
   const width = 120;
   const height = 150;
   const strings = 6;
@@ -52,8 +66,8 @@ const createChordDiagram = (name, shape) => {
   const gridHeight = 100;
   const stringSpacing = gridWidth / (strings - 1);
   const fretSpacing = gridHeight / frets;
-  const values = shape.split("").map((value) => (value === "x" ? value : Number(value)));
-  const playedFrets = values.filter((value) => Number.isInteger(value) && value > 0);
+  const normalizedValues = values.map((value) => (value === "x" ? value : Number(value)));
+  const playedFrets = normalizedValues.filter((value) => Number.isInteger(value) && value > 0);
   const baseFret = playedFrets.length ? Math.min(...playedFrets) : 1;
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -91,7 +105,7 @@ const createChordDiagram = (name, shape) => {
     );
   }
 
-  values.forEach((value, string) => {
+  normalizedValues.forEach((value, string) => {
     const x = left + string * stringSpacing;
     if (value === "x") {
       const marker = createSvgElement("text", { x, y: 16, "text-anchor": "middle", "font-size": 13, fill: "#6d7691" });
@@ -105,8 +119,7 @@ const createChordDiagram = (name, shape) => {
       );
       return;
     }
-    const fretOffset = baseFret > 1 ? 1.5 : 0.5;
-    const y = top + (value - baseFret + fretOffset) * fretSpacing;
+    const y = top + (value - baseFret + 0.5) * fretSpacing;
     svg.appendChild(createSvgElement("circle", { cx: x, cy: y, r: 6, fill: "#2e5be7" }));
   });
 
@@ -131,7 +144,7 @@ const renderPoster = () => {
   poster.replaceChildren();
   statusMessage.textContent =
     invalidCount > 0
-      ? `${invalidCount} line${invalidCount === 1 ? "" : "s"} ignored. Check format: Name Position (single-digit frets only).`
+      ? `${invalidCount} line${invalidCount === 1 ? "" : "s"} ignored. Use "Name Position" with either x32010 or x-10-12-12-11-x format.`
       : "";
 
   const heading = document.createElement("h2");
@@ -159,7 +172,7 @@ const renderPoster = () => {
       card.appendChild(name);
 
       const diagram = document.createElement("div");
-      diagram.appendChild(createChordDiagram(chord.name, chord.shape));
+      diagram.appendChild(createChordDiagram(chord.name, chord.values));
       card.appendChild(diagram);
 
       grid.appendChild(card);
@@ -170,7 +183,7 @@ const renderPoster = () => {
     const message = document.createElement("p");
     message.className = "message";
     message.textContent =
-      'No valid chords yet. Use "Name Position" and six characters with single-digit frets, e.g. "D xx0232".';
+      'No valid chords yet. Use "Name Position", e.g. "D xx0232" or "F#m x-9-11-11-10-x".';
     poster.appendChild(message);
   }
 };

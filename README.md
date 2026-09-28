@@ -16,7 +16,9 @@ Open `index.html` from the repository root directly in a browser, or serve the f
 2. Add chords one per line in this format: `Name Position`
    - Example: `C x32010`
    - Multi-word names are supported, e.g. `A add9 x02420`.
-   - Position must be 6 characters (`x`, `0`-`9`) from low E to high e, using single-digit frets only.
+   - Position can be either:
+     - 6 compact characters (`x`, `0`-`9`) from low E to high e, e.g. `x32010`
+     - 6 hyphen-separated string values for higher frets, e.g. `x-10-12-12-11-x`
    - Fretted notes must fit within a 5-fret span.
 3. Click **Generate Poster** to refresh the preview.
 4. Click **Print / Save PDF** to print or export your poster.
