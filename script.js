@@ -105,7 +105,8 @@ const createChordDiagram = (name, shape) => {
       );
       return;
     }
-    const y = top + (value - baseFret + 0.5) * fretSpacing;
+    const fretOffset = baseFret > 1 ? 1.5 : 0.5;
+    const y = top + (value - baseFret + fretOffset) * fretSpacing;
     svg.appendChild(createSvgElement("circle", { cx: x, cy: y, r: 6, fill: "#2e5be7" }));
   });
 
@@ -129,7 +130,9 @@ const renderPoster = () => {
   const { chords, invalidCount } = parseChords(chordInput.value);
   poster.replaceChildren();
   statusMessage.textContent =
-    invalidCount > 0 ? `${invalidCount} line${invalidCount === 1 ? "" : "s"} ignored. Check format: Name Position.` : "";
+    invalidCount > 0
+      ? `${invalidCount} line${invalidCount === 1 ? "" : "s"} ignored. Check format: Name Position (single-digit frets only).`
+      : "";
 
   const heading = document.createElement("h2");
   heading.textContent = title;
@@ -166,7 +169,8 @@ const renderPoster = () => {
   } else {
     const message = document.createElement("p");
     message.className = "message";
-    message.textContent = 'No valid chords yet. Use "Name Position" and six characters, e.g. "D xx0232".';
+    message.textContent =
+      'No valid chords yet. Use "Name Position" and six characters with single-digit frets, e.g. "D xx0232".';
     poster.appendChild(message);
   }
 };
